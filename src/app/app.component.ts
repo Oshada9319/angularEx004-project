@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { AppService } from './app.service';
+import { Profile } from './profile';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +12,7 @@ export class AppComponent {
   name : String;
   age : number;
   found : boolean;
+  profiles: Profile[];
 
   constructor(private appService: AppService){}
 
@@ -30,6 +31,15 @@ export class AppComponent {
         }
       }
     )
+  }
+
+  addProfile(): void {
+    var profile: Profile = {id: 3, name: "Thusitha", age: "26"};
+    if (!profile) { return; }
+    this.appService.addProfile(profile  as Profile)
+      .subscribe(profile => {
+        //this.profiles.push(profile);
+      });
   }
 
 }

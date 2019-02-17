@@ -14,15 +14,26 @@ const httpOptions = {
 
 export class AppService {
 
+  private profileUrl = "http://my-json-server.typicode.com/Oshada9319/JSON-Server-Faker/profiles";
+
   constructor(private http: HttpClient) { }
 
   /** GET profiles from the server */
   getProfile (name: String): Observable<Profile[]> {
-    return this.http.get<Profile[]>("http://my-json-server.typicode.com/Oshada9319/JSON-Server-Faker/profiles")
+    const url = `${this.profileUrl}/?name=${name}`;
+    return this.http.get<Profile[]>(url)
       .pipe(
         tap(_ => this.log('fetched profile')),
         catchError(this.handleError('getHeroes', []))
       );
+  }
+
+  /** POST: add a profile to the server */
+  addProfile (profile: Profile): Observable<Profile> {
+    return this.http.post<Profile>(`http://my-json-server.typicode.com/Oshada9319/JSON-Server-Faker/profiles`, profile, httpOptions).pipe(
+      tap((newProfile: Profile) => this.log(`added profile w/ id=${newProfile.id}`)),
+      catchError(this.handleError<Profile>('addProfile'))
+    );
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
